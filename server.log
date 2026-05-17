@@ -1,0 +1,6 @@
+INFO: Server started successfully
+INFO: Database connected
+WARNING: High memory usage detected
+ERROR: Failed to connect to Redis server
+ERROR: Timeout while fetching API data
+INFO: Retry attempt started
