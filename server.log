@@ -5,3 +5,5 @@ ERROR: Failed to connect to Redis server
 ERROR: Timeout while fetching API data
 INFO: Retry attempt started
 ERROR: Redis service unavailable
+ERROR: Docker container crashed
+CRITICAL: Database completely unreachable

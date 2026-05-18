@@ -30,7 +30,11 @@ class LogHandler(FileSystemEventHandler):
 
             for line in new_logs:
 
-                if "ERROR" in line or "WARNING" in line:
+                if (
+                    "ERROR" in line or
+                    "WARNING" in line or
+                    "CRITICAL" in line
+                ):
                     important_logs.append(line)
 
             # Ignore if no important logs
@@ -42,18 +46,23 @@ class LogHandler(FileSystemEventHandler):
             print("\nNew Issues Detected:\n")
             print(logs)
 
+            # Improved concise prompt
             prompt = f"""
             Analyze these NEW logs.
 
             Logs:
             {logs}
 
-            Tasks:
-            1. Find issues
-            2. Explain problems
-            3. Suggest fixes
-            4. Give severity level
-            5. Suggest Linux/DevOps troubleshooting commands
+            Give SHORT and CLEAR responses only.
+
+            Format:
+
+            Issue:
+            Severity: LOW / MEDIUM / HIGH / CRITICAL
+            Fix:
+            Commands:
+
+            Keep answers concise.
             """
 
             response = ollama.chat(
@@ -70,6 +79,15 @@ class LogHandler(FileSystemEventHandler):
 
             print("\nAI Analysis:\n")
             print(answer)
+
+            # Autonomous alert system
+            if "CRITICAL" in answer:
+
+                print("\n🚨 CRITICAL ALERT DETECTED 🚨")
+
+            elif "HIGH" in answer:
+
+                print("\n⚠️ HIGH SEVERITY ISSUE DETECTED ⚠️")
 
             # Save report
             with open("report.txt", "a") as report_file:
