@@ -18,13 +18,12 @@ class LogHandler(FileSystemEventHandler):
 
             with open(LOG_FILE, "r") as file:
 
-                # Move to last read position
+                # Read only new logs
                 file.seek(last_position)
 
-                # Read only new lines
                 new_logs = file.readlines()
 
-                # Update position
+                # Update file position
                 last_position = file.tell()
 
             important_logs = []
@@ -34,12 +33,13 @@ class LogHandler(FileSystemEventHandler):
                 if "ERROR" in line or "WARNING" in line:
                     important_logs.append(line)
 
+            # Ignore if no important logs
             if not important_logs:
                 return
 
             logs = "".join(important_logs)
 
-            print("\nNew issues detected:\n")
+            print("\nNew Issues Detected:\n")
             print(logs)
 
             prompt = f"""
@@ -53,6 +53,7 @@ class LogHandler(FileSystemEventHandler):
             2. Explain problems
             3. Suggest fixes
             4. Give severity level
+            5. Suggest Linux/DevOps troubleshooting commands
             """
 
             response = ollama.chat(
@@ -70,6 +71,7 @@ class LogHandler(FileSystemEventHandler):
             print("\nAI Analysis:\n")
             print(answer)
 
+            # Save report
             with open("report.txt", "a") as report_file:
 
                 report_file.write("\n\n====================\n")
