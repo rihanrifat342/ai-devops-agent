@@ -270,3 +270,252 @@ Issue: Database is unavailable and unresponsive
 Severity: CRITICAL
 Fix: Immediately investigate database availability and restore service
 Commands: Verify database status, check logs for errors
+
+====================
+Here are the analyzed logs with short and clear responses:
+
+**1. WARNING: High memory usage detected**
+Issue: Memory usage high
+Severity: MEDIUM
+Fix: Monitor and optimize memory usage
+Commands: `top` or `htop` to check memory usage, `pmap` to identify memory-intensive processes
+
+**2. ERROR: Failed to connect to Redis server**
+Issue: Redis connection failed
+Severity: HIGH
+Fix: Check Redis service status and connectivity
+Commands: `redis-cli ping` to check Redis connectivity, `systemctl status redis` to check service status
+
+**3. ERROR: Timeout while fetching API data**
+Issue: API data fetch timeout
+Severity: MEDIUM
+Fix: Investigate API server issues or latency
+Commands: `curl -v <API_URL>` to test API connection, `ping <API_SERVER>` to check network latency
+
+**4. ERROR: Redis service unavailable**
+Issue: Redis service not available
+Severity: HIGH
+Fix: Check Redis service status and connectivity
+Commands: Same as issue 2
+
+**5. ERROR: Docker container crashed**
+Issue: Docker container crashed
+Severity: MEDIUM
+Fix: Investigate container logs for errors
+Commands: `docker ps -a` to list containers, `docker logs <CONTAINER_ID>` to view container logs
+
+**6. CRITICAL: Database completely unreachable**
+Issue: Database not reachable
+Severity: CRITICAL
+Fix: Restore database connection or check underlying issues
+Commands: `pg_isready` (for PostgreSQL) or equivalent command for your database type, `systemctl status db-service` to check service status
+
+**7. CRITICAL: Production database unreachable**
+Issue: Production database not reachable
+Severity: CRITICAL
+Fix: Restore production database connection or check underlying issues
+Commands: Same as issue 6
+
+====================
+Here are the analyzed logs with short and clear responses:
+
+**1. WARNING: High memory usage detected**
+Issue: Memory usage is high
+Severity: LOW
+Fix: Monitor memory usage, consider optimizing or adding more resources if necessary
+Commands: None needed
+
+**2. ERROR: Failed to connect to Redis server**
+Issue: Connection to Redis server failed
+Severity: MEDIUM
+Fix: Check Redis server status, ensure it's running and configured correctly
+Commands: `redis-cli ping` to check Redis connection
+
+**3. ERROR: Timeout while fetching API data**
+Issue: Timed out while fetching API data
+Severity: MEDIUM
+Fix: Check API endpoint, ensure it's not timing out or has high latency
+Commands: None needed
+
+**4. ERROR: Redis service unavailable**
+Issue: Redis service is unavailable
+Severity: MEDIUM
+Fix: Check Redis server status, ensure it's running and configured correctly
+Commands: `redis-cli ping` to check Redis connection
+
+**5. ERROR: Docker container crashed**
+Issue: Docker container crashed
+Severity: MEDIUM
+Fix: Restart the container or investigate the cause of the crash
+Commands: `docker restart <container_name>` to restart the container
+
+**6. CRITICAL: Database completely unreachable**
+Issue: Database is completely unreachable
+Severity: CRITICAL
+Fix: Investigate and fix the underlying issue causing database unreachability
+Commands: None needed (this is a critical error, investigate first)
+
+**7. CRITICAL: Production database unreachable**
+Issue: Production database is unreachable
+Severity: CRITICAL
+Fix: Investigate and fix the underlying issue causing database unreachability
+Commands: None needed (this is a critical error, investigate first)
+
+====================
+Here are the analyzed logs with short and clear responses:
+
+**1. WARNING: High memory usage detected**
+Issue: Memory issues
+Severity: MEDIUM
+Fix: Monitor memory usage, optimize application
+Commands: `top`, `free -m`, `pmap`
+
+**2. ERROR: Failed to connect to Redis server**
+Issue: Redis connectivity issue
+Severity: MEDIUM
+Fix: Check Redis service status and connection settings
+Commands: `redis-cli ping`, `systemctl status redis`
+
+**3. ERROR: Timeout while fetching API data**
+Issue: Slow API response
+Severity: LOW
+Fix: Optimize API query or increase timeout
+Commands: None
+
+**4. ERROR: Redis service unavailable**
+Issue: Redis service unavailability
+Severity: MEDIUM
+Fix: Restart Redis service or check logs for errors
+Commands: `systemctl restart redis`, `journalctl -u redis`
+
+**5. ERROR: Docker container crashed**
+Issue: Container crash
+Severity: HIGH
+Fix: Investigate and fix underlying issue
+Commands: `docker ps -a`, `docker logs <container_id>`
+
+**6. CRITICAL: Database completely unreachable**
+Issue: Unavailable database
+Severity: CRITICAL
+Fix: Restore database connection or backup data
+Commands: None
+
+**7. CRITICAL: Production database unreachable**
+Issue: Unavailable production database
+Severity: CRITICAL
+Fix: Restore database connection or backup data
+Commands: None
+
+**8. CRITICAL: API gateway failure**
+Issue: API gateway unavailability
+Severity: CRITICAL
+Fix: Investigate and fix underlying issue
+Commands: `systemctl status api_gateway`, `curl -v http://api_gateway`
+
+====================
+Here are the analyzed logs with short and clear responses:
+
+**1. WARNING: High memory usage detected**
+Issue: Memory usage high
+Severity: MEDIUM
+Fix: Check system resources, consider allocating more RAM if needed
+Commands: None required
+
+**2. ERROR: Failed to connect to Redis server**
+Issue: Unable to connect to Redis server
+Severity: HIGH
+Fix: Check Redis server status and connection settings
+Commands: Try reconnecting or restarting Redis service
+
+**3. ERROR: Timeout while fetching API data**
+Issue: API request timed out
+Severity: MEDIUM
+Fix: Investigate API server performance, check network latency
+Commands: Test API requests again with timeouts
+
+**4. ERROR: Redis service unavailable**
+Issue: Redis service not available
+Severity: HIGH
+Fix: Check Redis server status and connection settings
+Commands: Try restarting Redis service or checking logs for errors
+
+**5. ERROR: Docker container crashed**
+Issue: Docker container failed
+Severity: MEDIUM
+Fix: Investigate container logs, restart or recreate as needed
+Commands: Check container logs, try restarting or recreating
+
+**6. CRITICAL: Database completely unreachable**
+Issue: Database unavailable
+Severity: CRITICAL
+Fix: Restart database service or investigate underlying issues
+Commands: Try restarting database service or checking logs for errors
+
+**7. CRITICAL: Production database unreachable**
+Issue: Production database unavailable
+Severity: CRITICAL
+Fix: Investigate and resolve underlying issue quickly
+Commands: Check logs, try restarting database service if possible
+
+**8. CRITICAL: API gateway failure**
+Issue: API gateway failed
+Severity: CRITICAL
+Fix: Restart API gateway or investigate underlying issues
+Commands: Try restarting API gateway or checking logs for errors
+
+====================
+Here are the analyzed logs with short and clear responses:
+
+**1. WARNING: High memory usage detected**
+Issue: Memory issue
+Severity: LOW
+Fix: None needed, but monitor memory usage
+Commands: none
+
+**2. ERROR: Failed to connect to Redis server**
+Issue: Redis connection failure
+Severity: MEDIUM
+Fix: Check Redis service status
+Commands: ping localhost
+
+**3. ERROR: Timeout while fetching API data**
+Issue: API timeout
+Severity: LOW
+Fix: None needed, but monitor API performance
+Commands: none
+
+**4. ERROR: Redis service unavailable**
+Issue: Redis service failure
+Severity: MEDIUM
+Fix: Check Redis service status
+Commands: ping localhost
+
+**5. ERROR: Docker container crashed**
+Issue: Container crash
+Severity: MEDIUM
+Fix: Restart the container
+Commands: tasklist
+
+**6. CRITICAL: Database completely unreachable**
+Issue: Database unreachability
+Severity: HIGH
+Fix: Investigate database connection issues
+Commands: none
+
+**7. CRITICAL: Production database unreachable**
+Issue: Production database unreachability
+Severity: CRITICAL
+Fix: Resolve production database connectivity issue ASAP
+Commands: tasklist
+
+**8. CRITICAL: API gateway failure**
+Issue: API gateway failure
+Severity: CRITICAL
+Fix: Investigate and resolve API gateway issues
+Commands: none
+
+**9. CRITICAL: Redis connection failure**
+Issue: Redis connection failure
+Severity: HIGH
+Fix: Check Redis service status and connectivity
+Commands: ping localhost

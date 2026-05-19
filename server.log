@@ -7,3 +7,6 @@ INFO: Retry attempt started
 ERROR: Redis service unavailable
 ERROR: Docker container crashed
 CRITICAL: Database completely unreachable
+CRITICAL: Production database unreachable
+CRITICAL: API gateway failure
+CRITICAL: Redis connection failure

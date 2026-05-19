@@ -1,5 +1,8 @@
 import time
 import ollama
+import subprocess
+
+from plyer import notification
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -23,7 +26,7 @@ class LogHandler(FileSystemEventHandler):
 
                 new_logs = file.readlines()
 
-                # Update file position
+                # Update position
                 last_position = file.tell()
 
             important_logs = []
@@ -46,7 +49,7 @@ class LogHandler(FileSystemEventHandler):
             print("\nNew Issues Detected:\n")
             print(logs)
 
-            # Improved concise prompt
+            # AI Prompt
             prompt = f"""
             Analyze these NEW logs.
 
@@ -61,6 +64,9 @@ class LogHandler(FileSystemEventHandler):
             Severity: LOW / MEDIUM / HIGH / CRITICAL
             Fix:
             Commands:
+            Choose ONLY from:
+            - tasklist
+            - ping localhost
 
             Keep answers concise.
             """
@@ -80,14 +86,27 @@ class LogHandler(FileSystemEventHandler):
             print("\nAI Analysis:\n")
             print(answer)
 
-            # Autonomous alert system
+            # HIGH severity alert
+            if "HIGH" in answer:
+
+                print("\n⚠️ HIGH SEVERITY ISSUE DETECTED ⚠️")
+
+                notification.notify(
+                    title="HIGH ALERT",
+                    message="High severity issue detected!",
+                    timeout=5
+                )
+
+            # CRITICAL severity alert
             if "CRITICAL" in answer:
 
                 print("\n🚨 CRITICAL ALERT DETECTED 🚨")
 
-            elif "HIGH" in answer:
-
-                print("\n⚠️ HIGH SEVERITY ISSUE DETECTED ⚠️")
+                notification.notify(
+                    title="CRITICAL ALERT",
+                    message="Critical system issue detected!",
+                    timeout=10
+                )
 
             # Save report
             with open("report.txt", "a") as report_file:
@@ -96,6 +115,28 @@ class LogHandler(FileSystemEventHandler):
                 report_file.write(answer)
 
             print("\nReport updated.\n")
+
+            # AI-DECIDED SAFE COMMAND EXECUTION
+
+            allowed_commands = [
+                "tasklist",
+                "ping localhost"
+            ]
+
+            for command in allowed_commands:
+
+                if command in answer:
+
+                    print(f"\nExecuting AI-decided command: {command}\n")
+
+                    result = subprocess.run(
+                        command,
+                        shell=True,
+                        capture_output=True,
+                        text=True
+                    )
+
+                    print(result.stdout)
 
 
 event_handler = LogHandler()
