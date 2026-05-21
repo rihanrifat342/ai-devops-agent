@@ -1,9 +1,58 @@
 import re
 import docker
+import psutil
 import pandas as pd
 import streamlit as st
+import smtplib
 
+from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
+
+# =========================
+# Email Alert Function
+# =========================
+
+def send_email_alert(message_body):
+
+    sender_email = "rihanrifat342@gmail.com"
+
+    receiver_email = "mohammed.rihan342@gmail.com"
+
+    app_password = "oyws lrct uzib plsx"
+
+    subject = "AI DevOps Critical Alert"
+
+    email_message = f"""
+Subject: {subject}
+
+{message_body}
+"""
+
+    try:
+
+        server = smtplib.SMTP(
+            "smtp.gmail.com",
+            587
+        )
+
+        server.starttls()
+
+        server.login(
+            sender_email,
+            app_password
+        )
+
+        server.sendmail(
+            sender_email,
+            receiver_email,
+            email_message.encode("utf-8")
+        )
+
+        server.quit()
+
+    except Exception as e:
+
+        print(e)
 
 # =========================
 # Auto Refresh
@@ -24,7 +73,7 @@ st.set_page_config(
 # Dashboard Title
 # =========================
 
-st.title("🤖 AI DevOps Monitoring Dashboard")
+st.title("AI DevOps Monitoring Dashboard")
 
 # =========================
 # System Status
@@ -38,17 +87,21 @@ st.success("Monitoring Agent Running")
 # Docker Monitoring
 # =========================
 
+containers = []
+
 try:
 
     client = docker.from_env()
 
+    client.ping()
+
     containers = client.containers.list(all=True)
 
-except Exception as e:
+    st.success("Docker Engine Connected")
 
-    containers = []
+except Exception:
 
-    st.error(f"Docker Error: {e}")
+    st.warning("Docker Engine Not Running")
 
 # =========================
 # Read Report File
@@ -63,6 +116,134 @@ try:
 except FileNotFoundError:
 
     report = ""
+
+# =========================
+# Live System Metrics
+# =========================
+
+st.subheader("Live System Metrics")
+
+cpu_usage = psutil.cpu_percent()
+
+ram_usage = psutil.virtual_memory().percent
+
+disk_usage = psutil.disk_usage('/').percent
+
+# =========================
+# Save Metrics History
+# =========================
+
+timestamp = datetime.now().strftime("%H:%M:%S")
+
+metrics_row = pd.DataFrame({
+    "Time": [timestamp],
+    "CPU": [cpu_usage],
+    "RAM": [ram_usage],
+    "Disk": [disk_usage]
+})
+
+try:
+
+    old_metrics = pd.read_csv("metrics_log.csv")
+
+    updated_metrics = pd.concat(
+        [old_metrics, metrics_row],
+        ignore_index=True
+    )
+
+except:
+
+    updated_metrics = metrics_row
+
+updated_metrics = updated_metrics.tail(50)
+
+updated_metrics.to_csv(
+    "metrics_log.csv",
+    index=False
+)
+
+# =========================
+# Metrics Cards
+# =========================
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("CPU Usage", f"{cpu_usage}%")
+col2.metric("RAM Usage", f"{ram_usage}%")
+col3.metric("Disk Usage", f"{disk_usage}%")
+
+# =========================
+# Progress Bars
+# =========================
+
+st.write("CPU Usage")
+st.progress(int(cpu_usage))
+
+st.write("RAM Usage")
+st.progress(int(ram_usage))
+
+st.write("Disk Usage")
+st.progress(int(disk_usage))
+
+# =========================
+# AI Anomaly Detection
+# =========================
+
+st.subheader("AI Anomaly Detection")
+
+anomalies = []
+
+if cpu_usage > 85:
+
+    anomalies.append(
+        "WARNING: High CPU usage detected"
+    )
+
+if ram_usage > 85:
+
+    anomalies.append(
+        "WARNING: High RAM usage detected"
+    )
+
+if disk_usage > 90:
+
+    anomalies.append(
+        "WARNING: High Disk usage detected"
+    )
+
+if anomalies:
+
+    for anomaly in anomalies:
+
+        st.error(anomaly)
+
+    # Send Email Alert
+
+    alert_message = "\n".join(anomalies)
+
+    send_email_alert(alert_message)
+
+else:
+
+    st.success("No anomalies detected")
+
+# =========================
+# Historical Metrics Charts
+# =========================
+
+st.subheader("Historical System Metrics")
+
+try:
+
+    metrics_data = pd.read_csv("metrics_log.csv")
+
+    st.line_chart(
+        metrics_data.set_index("Time")[["CPU", "RAM", "Disk"]]
+    )
+
+except Exception as e:
+
+    st.warning(f"Metrics Chart Error: {e}")
 
 # =========================
 # Severity Counting
@@ -81,10 +262,10 @@ st.subheader("Severity Overview")
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("🔴 Critical", critical_count)
-col2.metric("🟠 High", high_count)
-col3.metric("🟡 Medium", medium_count)
-col4.metric("🟢 Low", low_count)
+col1.metric("Critical", critical_count)
+col2.metric("High", high_count)
+col3.metric("Medium", medium_count)
+col4.metric("Low", low_count)
 
 # =========================
 # Severity Analytics
@@ -114,15 +295,27 @@ st.subheader("Docker Containers")
 
 container_data = []
 
-for container in containers:
+try:
 
-    container_data.append({
-        "Name": container.name,
-        "Status": container.status,
-        "Container ID": container.short_id
-    })
+    for container in containers:
 
-st.table(container_data)
+        container_data.append({
+            "Name": container.name,
+            "Status": container.status,
+            "Container ID": container.short_id
+        })
+
+    if container_data:
+
+        st.table(container_data)
+
+    else:
+
+        st.info("No containers found.")
+
+except Exception as e:
+
+    st.error(f"Container Display Error: {e}")
 
 # =========================
 # Incident Reports
@@ -130,7 +323,7 @@ st.table(container_data)
 
 st.subheader("Incident Reports")
 
-if report:
+if report.strip():
 
     incidents = report.split("====================")
 
@@ -152,23 +345,21 @@ if report:
         elif "MEDIUM" in incident:
             severity = "MEDIUM"
 
-        # Severity Styles
-
         if severity == "CRITICAL":
 
-            st.error(f"🚨 {severity}")
+            st.error(f"CRITICAL")
 
         elif severity == "HIGH":
 
-            st.warning(f"⚠️ {severity}")
+            st.warning(f"HIGH")
 
         elif severity == "MEDIUM":
 
-            st.info(f"🟡 {severity}")
+            st.info(f"MEDIUM")
 
         else:
 
-            st.success(f"🟢 {severity}")
+            st.success(f"LOW")
 
         with st.expander("View Incident Details"):
 
@@ -232,12 +423,12 @@ except FileNotFoundError:
 
 if critical_count > 0:
 
-    st.error("🚨 Critical Issues Detected!")
+    st.error("Critical Issues Detected")
 
 elif high_count > 0:
 
-    st.warning("⚠️ High Severity Issues Detected!")
+    st.warning("High Severity Issues Detected")
 
 else:
 
-    st.success("✅ System Stable")
+    st.success("System Stable")

@@ -1,0 +1,7 @@
+streamlit
+pandas
+psutil
+docker
+streamlit-autorefresh
+openai
+plyer

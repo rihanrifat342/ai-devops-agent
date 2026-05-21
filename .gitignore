@@ -1,3 +1,6 @@
 venv/
-.env
 __pycache__/
+*.pyc
+metrics_log.csv
+report.txt
+healing_log.txt
