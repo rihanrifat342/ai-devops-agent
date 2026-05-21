@@ -87,7 +87,11 @@ st.success("Monitoring Agent Running")
 # Docker Monitoring
 # =========================
 
+st.subheader("Docker Monitoring")
+
 containers = []
+
+docker_available = False
 
 try:
 
@@ -97,11 +101,15 @@ try:
 
     containers = client.containers.list(all=True)
 
+    docker_available = True
+
     st.success("Docker Engine Connected")
 
 except Exception:
 
-    st.warning("Docker Engine Not Running")
+    st.info(
+        "Docker monitoring unavailable on cloud deployment"
+    )
 
 # =========================
 # Read Report File
@@ -217,8 +225,6 @@ if anomalies:
 
         st.error(anomaly)
 
-    # Send Email Alert
-
     alert_message = "\n".join(anomalies)
 
     send_email_alert(alert_message)
@@ -293,29 +299,39 @@ st.bar_chart(
 
 st.subheader("Docker Containers")
 
-container_data = []
+if docker_available:
 
-try:
+    container_data = []
 
-    for container in containers:
+    try:
 
-        container_data.append({
-            "Name": container.name,
-            "Status": container.status,
-            "Container ID": container.short_id
-        })
+        for container in containers:
 
-    if container_data:
+            container_data.append({
+                "Name": container.name,
+                "Status": container.status,
+                "Container ID": container.short_id
+            })
 
-        st.table(container_data)
+        if container_data:
 
-    else:
+            st.table(container_data)
 
-        st.info("No containers found.")
+        else:
 
-except Exception as e:
+            st.info("No containers found.")
 
-    st.error(f"Container Display Error: {e}")
+    except Exception as e:
+
+        st.error(
+            f"Container Display Error: {e}"
+        )
+
+else:
+
+    st.info(
+        "Docker containers cannot be displayed on Render cloud"
+    )
 
 # =========================
 # Incident Reports
@@ -347,19 +363,19 @@ if report.strip():
 
         if severity == "CRITICAL":
 
-            st.error(f"CRITICAL")
+            st.error("CRITICAL")
 
         elif severity == "HIGH":
 
-            st.warning(f"HIGH")
+            st.warning("HIGH")
 
         elif severity == "MEDIUM":
 
-            st.info(f"MEDIUM")
+            st.info("MEDIUM")
 
         else:
 
-            st.success(f"LOW")
+            st.success("LOW")
 
         with st.expander("View Incident Details"):
 
