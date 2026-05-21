@@ -9,6 +9,52 @@ from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 
 # =========================
+# Login Credentials
+# =========================
+
+USERNAME = "admin"
+
+PASSWORD = "admin123"
+
+# =========================
+# Login Authentication
+# =========================
+
+if "authenticated" not in st.session_state:
+
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+
+    st.title("Login - AI DevOps Platform")
+
+    username = st.text_input("Username")
+
+    password = st.text_input(
+        "Password",
+        type="password"
+    )
+
+    if st.button("Login"):
+
+        if (
+            username == USERNAME
+            and password == PASSWORD
+        ):
+
+            st.session_state.authenticated = True
+
+            st.success("Login successful")
+
+            st.rerun()
+
+        else:
+
+            st.error("Invalid username or password")
+
+    st.stop()
+
+# =========================
 # Email Alert Function
 # =========================
 
@@ -18,7 +64,7 @@ def send_email_alert(message_body):
 
     receiver_email = "mohammed.rihan342@gmail.com"
 
-    app_password = "oyws lrct uzib plsx"
+    app_password = "glck hchu yyye zfvy"
 
     subject = "AI DevOps Critical Alert"
 
