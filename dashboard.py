@@ -12,7 +12,7 @@ from streamlit_autorefresh import st_autorefresh
 # Login Credentials
 # =========================
 
-USERNAME = "admin"
+USERNAME = "rihan342"
 
 PASSWORD = "admin123"
 
@@ -247,11 +247,37 @@ st.subheader("AI Anomaly Detection")
 
 anomalies = []
 
+root_causes = []
+
+# =========================
+# CPU Analysis
+# =========================
+
 if cpu_usage > 85:
 
     anomalies.append(
         "WARNING: High CPU usage detected"
     )
+
+    root_causes.append({
+        "Issue": "High CPU Usage",
+        "Cause": (
+            "Heavy container workload or "
+            "infinite background process."
+        ),
+        "Impact": (
+            "System slowdown and unstable "
+            "performance."
+        ),
+        "Fix": (
+            "Restart overloaded services "
+            "and optimize CPU-intensive tasks."
+        )
+    })
+
+# =========================
+# RAM Analysis
+# =========================
 
 if ram_usage > 85:
 
@@ -259,11 +285,51 @@ if ram_usage > 85:
         "WARNING: High RAM usage detected"
     )
 
+    root_causes.append({
+        "Issue": "High RAM Usage",
+        "Cause": (
+            "Memory leak or excessive "
+            "application caching."
+        ),
+        "Impact": (
+            "Application crashes and "
+            "reduced responsiveness."
+        ),
+        "Fix": (
+            "Clear unused memory and "
+            "restart memory-heavy services."
+        )
+    })
+
+# =========================
+# Disk Analysis
+# =========================
+
 if disk_usage > 90:
 
     anomalies.append(
         "WARNING: High Disk usage detected"
     )
+
+    root_causes.append({
+        "Issue": "High Disk Usage",
+        "Cause": (
+            "Large logs, temporary files "
+            "or storage overflow."
+        ),
+        "Impact": (
+            "Storage exhaustion and "
+            "service interruptions."
+        ),
+        "Fix": (
+            "Delete unnecessary files "
+            "and rotate old logs."
+        )
+    })
+
+# =========================
+# Show Anomalies
+# =========================
 
 if anomalies:
 
@@ -278,6 +344,36 @@ if anomalies:
 else:
 
     st.success("No anomalies detected")
+
+# =========================
+# AI Root Cause Analysis
+# =========================
+
+st.subheader("AI Root Cause Analysis")
+
+if root_causes:
+
+    for item in root_causes:
+
+        with st.expander(item["Issue"]):
+
+            st.write(
+                f"Possible Cause: {item['Cause']}"
+            )
+
+            st.write(
+                f"Impact: {item['Impact']}"
+            )
+
+            st.write(
+                f"Recommended Fix: {item['Fix']}"
+            )
+
+else:
+
+    st.success(
+        "No critical root causes identified"
+    )
 
 # =========================
 # Historical Metrics Charts
