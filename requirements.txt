@@ -5,3 +5,4 @@ docker
 streamlit-autorefresh
 openai
 plyer
+kubernetes
