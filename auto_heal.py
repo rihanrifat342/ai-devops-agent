@@ -1,52 +1,154 @@
 import docker
-import time
+import psutil
 
 from datetime import datetime
 
-client = docker.from_env()
+# =========================
+# Docker Client
+# =========================
 
-print("\nAI Auto-Healing System Running...\n")
+docker_available = False
 
-while True:
+try:
 
-    containers = client.containers.list(all=True)
+    client = docker.from_env()
+
+    client.ping()
+
+    docker_available = True
+
+except Exception:
+
+    print(
+        "Docker Engine not available."
+    )
+
+# =========================
+# Healing Log Function
+# =========================
+
+def log_healing_action(action):
+
+    with open("healing_log.txt", "a") as file:
+
+        file.write(
+            f"[{datetime.now()}] "
+            f"{action}\n"
+        )
+
+# =========================
+# System Metrics
+# =========================
+
+cpu_usage = psutil.cpu_percent()
+
+ram_usage = psutil.virtual_memory().percent
+
+disk_usage = psutil.disk_usage('/').percent
+
+# =========================
+# CPU Healing
+# =========================
+
+if cpu_usage > 90:
+
+    action = (
+        "AI Healing Triggered: "
+        "High CPU usage detected."
+    )
+
+    print(action)
+
+    log_healing_action(action)
+
+# =========================
+# RAM Healing
+# =========================
+
+if ram_usage > 90:
+
+    action = (
+        "AI Healing Triggered: "
+        "High RAM usage detected."
+    )
+
+    print(action)
+
+    log_healing_action(action)
+
+# =========================
+# Disk Healing
+# =========================
+
+if disk_usage > 95:
+
+    action = (
+        "AI Healing Triggered: "
+        "Critical disk usage detected."
+    )
+
+    print(action)
+
+    log_healing_action(action)
+
+# =========================
+# Docker Auto Recovery
+# =========================
+
+if docker_available:
+
+    containers = client.containers.list(
+        all=True
+    )
 
     for container in containers:
 
-        if container.status == "exited":
+        container_status = (
+            container.status.lower()
+        )
 
-            print(f"\n[ALERT] Container stopped: {container.name}")
+        if container_status != "running":
 
             try:
 
-                print(f"Restarting container: {container.name}")
-
                 container.restart()
 
-                success_message = (
-                    f"[{datetime.now()}] "
-                    f"AI restarted container: "
-                    f"{container.name} | STATUS: SUCCESS\n"
+                action = (
+                    f"AI Auto-Recovery: "
+                    f"Restarted container "
+                    f"{container.name}"
                 )
 
-                print(success_message)
+                print(action)
 
-                with open("healing_log.txt", "a") as log_file:
-
-                    log_file.write(success_message)
+                log_healing_action(action)
 
             except Exception as e:
 
-                error_message = (
-                    f"[{datetime.now()}] "
-                    f"FAILED to restart: "
-                    f"{container.name} | ERROR: {e}\n"
+                action = (
+                    f"Failed to restart "
+                    f"{container.name}: {e}"
                 )
 
-                print(error_message)
+                print(action)
 
-                with open("healing_log.txt", "a") as log_file:
+                log_healing_action(action)
 
-                    log_file.write(error_message)
+# =========================
+# Stable System
+# =========================
 
-    time.sleep(10)
+if (
+    cpu_usage < 90
+    and ram_usage < 90
+    and disk_usage < 95
+):
+
+    action = (
+        "System Stable: "
+        "No healing required."
+    )
+
+    print(action)
+
+    log_healing_action(action)

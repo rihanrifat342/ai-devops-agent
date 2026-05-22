@@ -4,6 +4,7 @@ import psutil
 import pandas as pd
 import streamlit as st
 import smtplib
+from kubernetes import client, config
 
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
@@ -374,6 +375,202 @@ else:
     st.success(
         "No critical root causes identified"
     )
+    
+    # =========================
+# AI Severity Prediction
+# =========================
+
+st.subheader("AI Severity Prediction")
+
+risk_score = (
+    (cpu_usage * 0.4)
+    + (ram_usage * 0.4)
+    + (disk_usage * 0.2)
+)
+
+failure_probability = int(risk_score)
+
+predicted_risk = "LOW"
+
+if risk_score > 85:
+
+    predicted_risk = "CRITICAL"
+
+elif risk_score > 70:
+
+    predicted_risk = "HIGH"
+
+elif risk_score > 50:
+
+    predicted_risk = "MEDIUM"
+    
+# =========================
+# Predictive Failure Forecasting
+# =========================
+
+st.subheader("Predictive Failure Forecasting")
+
+forecast_message = ""
+
+system_stability = 100 - int(risk_score)
+
+# =========================
+# Failure Forecast Logic
+# =========================
+
+if cpu_usage > 90 and ram_usage > 90:
+
+    forecast_message = (
+        "System may experience a critical "
+        "failure within 10-15 minutes due "
+        "to extreme CPU and RAM usage."
+    )
+
+elif ram_usage > 85:
+
+    forecast_message = (
+        "High memory consumption may cause "
+        "application instability or crashes "
+        "if usage continues increasing."
+    )
+
+elif cpu_usage > 85:
+
+    forecast_message = (
+        "Sustained CPU overload could lead "
+        "to service slowdown and degraded "
+        "system responsiveness."
+    )
+
+elif disk_usage > 95:
+
+    forecast_message = (
+        "Storage exhaustion risk detected. "
+        "Services may fail if disk cleanup "
+        "is not performed soon."
+    )
+
+else:
+
+    forecast_message = (
+        "System forecast indicates stable "
+        "operations with low failure risk."
+    )
+
+# =========================
+# Display Forecast
+# =========================
+
+if (
+    cpu_usage > 90
+    or ram_usage > 90
+    or disk_usage > 95
+):
+
+    st.error(forecast_message)
+
+elif (
+    cpu_usage > 80
+    or ram_usage > 80
+):
+
+    st.warning(forecast_message)
+
+else:
+
+    st.success(forecast_message)
+
+# =========================
+# Stability Score
+# =========================
+
+st.metric(
+    "System Stability Score",
+    f"{system_stability}%"
+)
+
+# =========================
+# AI Forecast Recommendation
+# =========================
+
+if system_stability < 40:
+
+    st.error(
+        "AI Forecast: Immediate intervention "
+        "recommended to prevent outage."
+    )
+
+elif system_stability < 70:
+
+    st.warning(
+        "AI Forecast: System should be "
+        "closely monitored for instability."
+    )
+
+else:
+
+    st.success(
+        "AI Forecast: Infrastructure "
+        "operating within safe conditions."
+    )    
+
+# =========================
+# Display Prediction
+# =========================
+
+if predicted_risk == "CRITICAL":
+
+    st.error(
+        f"Predicted Risk Level: {predicted_risk}"
+    )
+
+elif predicted_risk == "HIGH":
+
+    st.warning(
+        f"Predicted Risk Level: {predicted_risk}"
+    )
+
+elif predicted_risk == "MEDIUM":
+
+    st.info(
+        f"Predicted Risk Level: {predicted_risk}"
+    )
+
+else:
+
+    st.success(
+        f"Predicted Risk Level: {predicted_risk}"
+    )
+
+st.metric(
+    "Failure Probability",
+    f"{failure_probability}%"
+)
+
+# =========================
+# AI Recommendation
+# =========================
+
+if predicted_risk in ["CRITICAL", "HIGH"]:
+
+    st.warning(
+        "AI Recommendation: Immediate system "
+        "optimization and monitoring required."
+    )
+
+elif predicted_risk == "MEDIUM":
+
+    st.info(
+        "AI Recommendation: Monitor system "
+        "resources closely."
+    )
+
+else:
+
+    st.success(
+        "AI Recommendation: System operating "
+        "within safe limits."
+    )
 
 # =========================
 # Historical Metrics Charts
@@ -434,6 +631,121 @@ st.subheader("Severity Analytics")
 st.bar_chart(
     data.set_index("Severity")
 )
+
+# =========================
+# Kubernetes Monitoring
+# =========================
+
+st.subheader("Kubernetes Cluster Monitoring")
+
+kubernetes_available = False
+
+try:
+
+    config.load_kube_config()
+
+    v1 = client.CoreV1Api()
+
+    pods = v1.list_pod_for_all_namespaces(
+        watch=False
+    )
+
+    kubernetes_available = True
+
+    st.success(
+        "Kubernetes Cluster Connected"
+    )
+
+except Exception as e:
+
+    st.warning(
+        f"Kubernetes unavailable: {e}"
+    )
+
+# =========================
+# Display Pod Information
+# =========================
+
+if kubernetes_available:
+
+    pod_data = []
+
+    failed_pods = 0
+
+    running_pods = 0
+
+    for pod in pods.items:
+
+        pod_name = pod.metadata.name
+
+        pod_namespace = (
+            pod.metadata.namespace
+        )
+
+        pod_status = pod.status.phase
+
+        if pod_status == "Running":
+
+            running_pods += 1
+
+        else:
+
+            failed_pods += 1
+
+        pod_data.append({
+            "Pod": pod_name,
+            "Namespace": pod_namespace,
+            "Status": pod_status
+        })
+
+    # =========================
+    # Cluster Metrics
+    # =========================
+
+    col1, col2 = st.columns(2)
+
+    col1.metric(
+        "Running Pods",
+        running_pods
+    )
+
+    col2.metric(
+        "Non-Running Pods",
+        failed_pods
+    )
+
+    # =========================
+    # Pod Table
+    # =========================
+
+    st.dataframe(pod_data)
+
+    # =========================
+    # AI Cluster Analysis
+    # =========================
+
+    st.subheader(
+        "AI Kubernetes Analysis"
+    )
+
+    if failed_pods > 0:
+
+        st.error(
+            "AI detected unstable "
+            "Kubernetes workloads."
+        )
+
+        st.warning(
+            "Recommendation: Restart "
+            "failing pods or deployments."
+        )
+
+    else:
+
+        st.success(
+            "AI Analysis: Cluster "
+            "operating normally."
+        )
 
 # =========================
 # Docker Containers
