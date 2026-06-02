@@ -352,6 +352,128 @@ else:
 
 st.subheader("AI Root Cause Analysis")
 
+# =========================
+# AI Incident Intelligence
+# =========================
+
+from datetime import datetime
+
+st.subheader("AI Incident Intelligence")
+
+incident_detected = False
+
+severity = "LOW"
+issue = "No active incidents"
+impact = "System operating normally"
+root_cause = "None detected"
+recommendation = "Continue monitoring"
+
+# RAM Incident
+if ram_usage > 80:
+
+    incident_detected = True
+
+    severity = "HIGH"
+
+    issue = "High RAM Usage"
+
+    impact = (
+        "Application performance may degrade "
+        "and services may become unstable."
+    )
+
+    root_cause = (
+        "Possible memory leak or excessive "
+        "application caching."
+    )
+
+    recommendation = (
+        "Restart memory-intensive services "
+        "and investigate memory allocation."
+    )
+
+# CPU Incident
+elif cpu_usage > 80:
+
+    incident_detected = True
+
+    severity = "MEDIUM"
+
+    issue = "High CPU Usage"
+
+    impact = (
+        "Slow response times and increased "
+        "system load."
+    )
+
+    root_cause = (
+        "Heavy background processing or "
+        "resource-intensive workloads."
+    )
+
+    recommendation = (
+        "Review running processes and "
+        "optimize workloads."
+    )
+
+# Disk Incident
+elif disk_usage > 90:
+
+    incident_detected = True
+
+    severity = "CRITICAL"
+
+    issue = "Disk Space Exhaustion"
+
+    impact = (
+        "Application crashes and inability "
+        "to write new data."
+    )
+
+    root_cause = (
+        "Log accumulation or insufficient "
+        "storage management."
+    )
+
+    recommendation = (
+        "Clean logs and expand storage "
+        "capacity."
+    )
+
+# Display Report
+
+if incident_detected:
+
+    st.error("Incident Detected")
+
+else:
+
+    st.success("No Active Incidents")
+
+report = f"""
+Time: {datetime.now()}
+
+Severity: {severity}
+
+Issue:
+{issue}
+
+Impact:
+{impact}
+
+Root Cause:
+{root_cause}
+
+Recommended Action:
+{recommendation}
+"""
+
+st.text_area(
+    "Generated Incident Report",
+    report,
+    height=250
+)
+
 if root_causes:
 
     for item in root_causes:
@@ -656,10 +778,11 @@ try:
         "Kubernetes Cluster Connected"
     )
 
-except Exception as e:
+except Exception:
 
-    st.warning(
-        f"Kubernetes unavailable: {e}"
+    st.info(
+        "Kubernetes monitoring is available only "
+        "in local environments with a configured cluster."
     )
 
 # =========================
