@@ -4,6 +4,7 @@ import psutil
 import pandas as pd
 import streamlit as st
 import smtplib
+from ollama_analyzer import analyze_metrics
 from kubernetes import client, config
 
 from datetime import datetime
@@ -356,149 +357,29 @@ st.subheader("AI Root Cause Analysis")
 # AI Incident Intelligence
 # =========================
 
-from datetime import datetime
+st.subheader("AI Incident Intelligence (Llama 3)")
 
-st.subheader("AI Incident Intelligence")
+try:
 
-incident_detected = False
-
-severity = "LOW"
-issue = "No active incidents"
-impact = "System operating normally"
-root_cause = "None detected"
-recommendation = "Continue monitoring"
-
-# RAM Incident
-if ram_usage > 80:
-
-    incident_detected = True
-
-    severity = "HIGH"
-
-    issue = "High RAM Usage"
-
-    impact = (
-        "Application performance may degrade "
-        "and services may become unstable."
+    incident_report = analyze_metrics(
+        cpu_usage,
+        ram_usage,
+        disk_usage
     )
 
-    root_cause = (
-        "Possible memory leak or excessive "
-        "application caching."
+    st.text_area(
+        "AI Generated Incident Report",
+        incident_report,
+        height=350
     )
 
-    recommendation = (
-        "Restart memory-intensive services "
-        "and investigate memory allocation."
-    )
+except Exception as e:
 
-# CPU Incident
-elif cpu_usage > 80:
-
-    incident_detected = True
-
-    severity = "MEDIUM"
-
-    issue = "High CPU Usage"
-
-    impact = (
-        "Slow response times and increased "
-        "system load."
-    )
-
-    root_cause = (
-        "Heavy background processing or "
-        "resource-intensive workloads."
-    )
-
-    recommendation = (
-        "Review running processes and "
-        "optimize workloads."
-    )
-
-# Disk Incident
-elif disk_usage > 90:
-
-    incident_detected = True
-
-    severity = "CRITICAL"
-
-    issue = "Disk Space Exhaustion"
-
-    impact = (
-        "Application crashes and inability "
-        "to write new data."
-    )
-
-    root_cause = (
-        "Log accumulation or insufficient "
-        "storage management."
-    )
-
-    recommendation = (
-        "Clean logs and expand storage "
-        "capacity."
-    )
-
-# Display Report
-
-if incident_detected:
-
-    st.error("Incident Detected")
-
-else:
-
-    st.success("No Active Incidents")
-
-report = f"""
-Time: {datetime.now()}
-
-Severity: {severity}
-
-Issue:
-{issue}
-
-Impact:
-{impact}
-
-Root Cause:
-{root_cause}
-
-Recommended Action:
-{recommendation}
-"""
-
-st.text_area(
-    "Generated Incident Report",
-    report,
-    height=250
-)
-
-if root_causes:
-
-    for item in root_causes:
-
-        with st.expander(item["Issue"]):
-
-            st.write(
-                f"Possible Cause: {item['Cause']}"
-            )
-
-            st.write(
-                f"Impact: {item['Impact']}"
-            )
-
-            st.write(
-                f"Recommended Fix: {item['Fix']}"
-            )
-
-else:
-
-    st.success(
-        "No critical root causes identified"
+    st.error(
+        f"Ollama Error: {e}"
     )
     
-    # =========================
+# =========================
 # AI Severity Prediction
 # =========================
 
