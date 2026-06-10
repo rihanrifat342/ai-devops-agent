@@ -1,76 +1,149 @@
-# AI DevOps Monitoring Platform
+# AI-Powered DevOps Monitoring and Incident Management Platform
 
-An AI-powered autonomous DevOps and observability platform built using Python, Streamlit, Docker, and AI-based monitoring workflows.
+## Overview
 
-## Features
+The AI-Powered DevOps Monitoring and Incident Management Platform is an intelligent AIOps solution designed to monitor system health, detect anomalies, analyze incidents, and provide actionable recommendations using Artificial Intelligence.
 
-- Real-time infrastructure monitoring
-- Docker container monitoring
-- AI anomaly detection
-- Autonomous self-healing
-- Live observability dashboard
-- Historical metrics analytics
-- Incident management system
-- AI remediation timeline
-- Automated email alerts
-- CPU, RAM, and Disk monitoring
-- Real-time server logs
-- Predictive infrastructure monitoring
+The platform combines real-time infrastructure monitoring, AI-driven incident analysis, observability tools, and automated operational workflows to improve system reliability and operational efficiency.
 
 ---
 
-## Tech Stack
+## Key Features
 
-- Python
-- Streamlit
-- Docker
-- Pandas
-- Psutil
-- SMTP Email Alerts
+### Real-Time Monitoring
+
+* CPU Usage Monitoring
+* RAM Usage Monitoring
+* Disk Usage Monitoring
+* Historical Resource Tracking
+
+### AI Incident Intelligence
+
+* AI-powered incident analysis using Ollama and Llama 3
+* Automated root cause analysis
+* Severity assessment
+* Actionable recommendations
+
+### Observability
+
+* Prometheus metrics collection
+* Grafana dashboards and visualizations
+* Real-time performance monitoring
+
+### DevOps Automation
+
+* Docker container monitoring
+* Auto-healing capabilities
+* Service health monitoring
+
+### Security
+
+* User authentication and login system
+* Controlled dashboard access
+
+### Cloud Deployment
+
+* GitHub integration
+* Render deployment support
 
 ---
 
-## Dashboard Features
+## System Architecture
 
-### Infrastructure Monitoring
-- CPU usage tracking
-- RAM monitoring
-- Disk monitoring
-- Historical metrics graphs
-
-### AI Monitoring
-- Anomaly detection
-- Predictive alerts
-- Incident severity analysis
-
-### Docker Integration
-- Live container monitoring
-- Container status tracking
-- Autonomous container healing
-
-### Alerting System
-- Automated email alerts
-- Incident escalation
-- Healing timeline tracking
-
----
-
-## Project Structure
-
-```bash
-ai-devops-agent/
-│
-├── dashboard.py
-├── monitor.py
-├── auto_heal.py
-├── email_alert.py
-├── requirements.txt
-├── README.md
-├── metrics_log.csv
-├── server.log
-├── report.txt
-└── healing_log.txt
+```text
+System Metrics (CPU, RAM, Disk)
+               |
+               v
+      Streamlit Dashboard
+               |
+      ------------------
+      |                |
+      v                v
+ Prometheus        Ollama (Llama 3)
+      |                |
+      v                v
+  Grafana      AI Incident Analysis
+      |                |
+      ------------------
+               |
+               v
+     Recommendations & Insights
 ```
+
+---
+
+## Technology Stack
+
+### Programming Language
+
+* Python
+
+### Frontend
+
+* Streamlit
+
+### Monitoring & Observability
+
+* Prometheus
+* Grafana
+
+### Artificial Intelligence
+
+* Ollama
+* Llama 3
+
+### DevOps Tools
+
+* Docker
+* Kubernetes
+
+### Cloud & Version Control
+
+* GitHub
+* Render
+
+### Python Libraries
+
+* psutil
+* streamlit
+* pandas
+* requests
+* prometheus_client
+* docker
+* kubernetes
+
+---
+
+## Project Modules
+
+### Monitoring Dashboard
+
+Displays real-time CPU, RAM, and Disk utilization through an interactive dashboard.
+
+### AI Incident Intelligence
+
+Uses Ollama with Llama 3 to generate:
+
+* Incident summaries
+* Root cause analysis
+* Severity levels
+* Recommended actions
+
+### Docker Monitoring
+
+Tracks Docker container health and operational status.
+
+### Prometheus Integration
+
+Collects and stores time-series monitoring metrics.
+
+### Grafana Dashboard
+
+Provides advanced visualizations and monitoring charts.
+
+### Auto-Healing Engine
+
+Supports automated recovery workflows for detected issues.
 
 ---
 
@@ -79,12 +152,7 @@ ai-devops-agent/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/rihanrifat342/ai-devops-agent.git
-```
-
-### Move Into Project
-
-```bash
+git clone <repository-url>
 cd ai-devops-agent
 ```
 
@@ -94,9 +162,25 @@ cd ai-devops-agent
 pip install -r requirements.txt
 ```
 
----
+### Start Ollama
 
-## Run Dashboard
+```bash
+ollama serve
+```
+
+### Verify Available Models
+
+```bash
+ollama list
+```
+
+### Start Metrics Exporter
+
+```bash
+python metrics_server.py
+```
+
+### Start Streamlit Dashboard
 
 ```bash
 streamlit run dashboard.py
@@ -104,34 +188,67 @@ streamlit run dashboard.py
 
 ---
 
-## Run Monitoring Engine
+## Sample AI Incident Analysis
 
-```bash
-python monitor.py
+### Input
+
+```text
+CPU Usage: 92%
+RAM Usage: 88%
+Disk Usage: 70%
+```
+
+### AI Output
+
+```text
+Incident Summary:
+High resource utilization detected.
+
+Root Cause:
+Possible application overload or memory leak.
+
+Severity:
+High
+
+Recommended Actions:
+Investigate running processes, optimize workloads,
+and review system resource allocation.
 ```
 
 ---
 
-## Run Auto-Healing System
+## Future Enhancements
 
-```bash
-python auto_heal.py
-```
+* Slack Notifications
+* Microsoft Teams Integration
+* Advanced ChatOps Assistant
+* Kubernetes Auto-Healing
+* Multi-Server Monitoring
+* Predictive Failure Analysis
+* AI-Based Capacity Planning
 
 ---
 
-## Future Improvements
+## Learning Outcomes
 
-- Kubernetes monitoring
-- Prometheus integration
-- AI root cause analysis
-- Multi-agent orchestration
-- Cloud deployment
-- Authentication system
-- Predictive failure detection
+This project demonstrates practical experience with:
+
+* Artificial Intelligence Operations (AIOps)
+* Infrastructure Monitoring
+* DevOps Practices
+* Observability Engineering
+* Docker Containerization
+* Prometheus Monitoring
+* Grafana Visualization
+* LLM Integration using Ollama
+* Cloud Deployment
 
 ---
 
 ## Author
 
-Mohammed Rihan
+**Mohammed Rihan**
+
+Information Science and Engineering Graduate
+
+AI | DevOps | Cloud | Monitoring | Automation
